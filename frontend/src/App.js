@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import './App.css';
 import './index.css';
 import Die from './Die'
+import questionMark from './imgs/svg/question-mark-in-a-circle.svg'
 
 function App() {
   const [dice, setDice] = useState(allNewDice())
   const [win, setWin] = useState(false)
+  const [showTip, setShowTip] = useState(false)
 
   useEffect(() => {
     let lose = false
@@ -14,8 +15,8 @@ function App() {
       for (let i = 0; i < selectedDice.length - 1; i++) {
         if (selectedDice[i].num !== selectedDice[i + 1].num) lose = true
       }
-      lose ? setWin(false) && console.log('STILL NOT WIN') 
-      : setWin(true) && console.log('WIIN')
+      lose ? setWin(false) && console.log('STILL NOT WIN')
+        : setWin(true) && console.log('WIIN')
     } else {
       setWin(false)
     }
@@ -69,15 +70,36 @@ function App() {
 
   return (
     <>
-      <div className='container'>
-        {winner()}
-        {
-          dice.map(die => {
-            return <Die die={die} selectDice={selectDice} key={die.id} />
-          })
-        }
-        <button onClick={() => roll()}>Roll</button>
-      </div>
+      <main>
+        <div className='container'>
+          <div className={showTip ? 'tip showed' : 'tip'}>
+            How to play: You must select 10 dice with same
+            numbers. If numbers don't match, you can roll to change them.
+          </div>
+          <div className='header-1'>
+            <img src={questionMark}
+              className='question-mark'
+              title="How to play?"
+              onClick={() => setShowTip(!showTip)} />
+            <h1>Tenzies game</h1>
+          </div>
+          <section className='dice-game'>
+            <div className='dice-container'>
+              {winner()}
+              {
+                dice.map(die => {
+                  return <Die die={die} selectDice={selectDice} key={die.id} />
+                })
+              }
+            </div>
+            <button onClick={() => roll()}
+              type="button"
+              className='roll-btn'>
+              Roll
+            </button>
+          </section>
+        </div>
+      </main>
     </>
   );
 }
